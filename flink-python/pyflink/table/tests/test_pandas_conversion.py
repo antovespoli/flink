@@ -236,7 +236,7 @@ class StreamPandasConversionTests(PandasConversionITTests,
         result_pdf = t.to_pandas()
         import pandas as pd
         os.remove(source_path)
-        assert_frame_equal(result_pdf, pd.DataFrame(
+        df = pd.DataFrame(
             data={"rowtime": [
                 datetime.datetime(2018, 3, 11, 3, 10),
                 datetime.datetime(2018, 3, 11, 3, 10),
@@ -244,4 +244,8 @@ class StreamPandasConversionTests(PandasConversionITTests,
                 datetime.datetime(2018, 3, 11, 3, 40),
                 datetime.datetime(2018, 3, 11, 4, 20),
                 datetime.datetime(2018, 3, 11, 3, 30),
-            ]}))
+            ]}
+        )
+        result_pdf['rowtime'] = pd.to_datetime(result_pdf['rowtime'], unit='ns')
+        df['rowtime'] = pd.to_datetime(df['rowtime'], unit='ns')
+        assert_frame_equal(result_pdf, df)
